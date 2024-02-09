@@ -1,0 +1,23 @@
+usb_cam_node_exe:
+  ros__parameters:
+    video_device: "/dev/video0"
+    image_width: 320
+    image_height: 240
+    pixel_format: "yuyv"
+    camera_frame_id: "usb_cam"
+    io_method: "mmap"
+    image_flip: false
+    camera_info_url: ""
+    camera_name: "usb_cam"
+    framerate: 30
+    brightness: -1 # Default, -1 indicates auto mode
+    contrast: -1 # Default, -1 indicates auto mode
+    saturation: -1 # Default, -1 indicates auto mode
+    sharpness: -1 # Default, -1 indicates auto mode
+    focus_auto: 1 # 0 for manual, 1 for auto
+    focus_absolute: -1 # Default, -1 indicates not setting it
+    exposure_auto: 1 # 1 for auto, 3 for manual
+    exposure_absolute: -1 # Default, -1 indicates not setting it
+    gain: -1 # Default, -1 indicates auto mode
+    white_balance_temperature_auto: 1 # 0 for manual, 1 for auto
+    white_balance_temperature: -1 # Default, -1 indicates not setting it

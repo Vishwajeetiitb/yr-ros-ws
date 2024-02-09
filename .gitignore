@@ -1,0 +1,16 @@
+*.bin
+**/*.bin
+build
+archive/*
+
+# ignore ros build, install files
+build
+install
+log
+#src
+
+archive
+
+.vscode
+
+**/*copy.py

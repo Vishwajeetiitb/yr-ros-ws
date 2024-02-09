@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot name="lower_limb_exoskeleton" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="PI" value="3.1415926535897931" />
+    <xacro:property name="alpha" value="0.8" />
+
+
+    <material name="silver">
+        <color rgba="0.8 0.8 0.8 ${alpha}" />
+    </material>
+
+    <material name="blue">
+        <color rgba="0.8 1 0.8 ${alpha}" />
+    </material>
+
+    <material name="green">
+        <color rgba="0.8 0.8 1 ${alpha}" />
+    </material>
+
+    <xacro:property name="waist_m" value="1" />
+    <xacro:property name="waist_l" value="0.05" />
+    <xacro:property name="waist_w" value="0.35" />
+    <xacro:property name="waist_h" value="0.05" />
+    <xacro:property name="waist_mat" value="silver" />
+
+    <xacro:property name="thigh_m" value="1" />
+    <xacro:property name="thigh_l" value="0.468" />
+    <xacro:property name="thigh_w" value="0.1" />
+    <xacro:property name="thigh_h" value="0.1" />
+    <!-- <xacro:property name="thigh_w" value="0.0657" />
+    <xacro:property name="thigh_h" value="0.0819" /> -->
+    <xacro:property name="thigh_mat" value="blue" />
+
+    <xacro:property name="calf_m" value="1" />
+    <xacro:property name="calf_l" value="0.468" />
+    <xacro:property name="calf_w" value="0.1" />
+    <xacro:property name="calf_h" value="0.1" />
+    <xacro:property name="calf_mat" value="green" />
+
+    <xacro:property name="foot_m" value="1" />
+    <xacro:property name="foot_l" value="0.15" /> <!-- distance down from shank link -->
+    <xacro:property name="foot_w" value="0.08" /> <!-- same direction as waist expand -->
+    <xacro:property name="foot_h" value="0.10" /> <!-- back/forward -->
+    <xacro:property name="foot_mat" value="silver" />
+    
+    <xacro:property name="thigh_mesh" value="package://yr_lle_sim/urdf/meshes_yr/exo_thigh.STL" />
+    <xacro:property name="shank_mesh" value="package://yr_lle_sim/urdf/meshes_yr/exo_shank.STL" />
+    <xacro:property name="foot_mesh" value="package://yr_lle_sim/urdf/meshes_yr/exo_foot.STL" />
+
+    <!-- <xacro:property name="thigh_mesh"
+    value="package://yr_lle_sim/urdf/meshes/front_left_upper_leg.dae" />
+    <xacro:property name="thigh_mesh"
+    value="package://yr_lle_sim/urdf/meshes/front_right_lower_leg.dae" /> -->
+
+</robot>
