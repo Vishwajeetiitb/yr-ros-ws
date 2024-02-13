@@ -71,3 +71,14 @@ ros2 launch yr_lle_sim model.launch.py
 ```
 
 ![](./src/yr_lle_sim/media/rviz_lle.png)
+
+---
+
+### Plotting
+
+```bash
+sudo apt install ros-iron-plotjuggler -y
+ros2 run plotjuggler plotjuggler
+```
+
+---
