@@ -1,0 +1,105 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    knee_effort_controller:
+      type: effort_controllers/JointEffortController
+      joint: knee
+      command_interfaces:
+        - effort
+
+# controller_manager:
+#   ros__parameters:
+#     update_rate: 100  # Hz
+
+#     joint_state_broadcaster:
+#       type: joint_state_broadcaster/JointStateBroadcaster
+
+#     knee_position_controller:
+#       type: forward_command_controller/ForwardCommandController
+#       joints:
+#         - knee
+#       interface_name: position
+#       command_interfaces:
+#         - position
+#       state_interfaces:
+#         - position
+#         - velocity
+
+#     # Example configuration for a velocity controller on the knee,
+#     # assuming you want to control the knee's velocity as well
+#     knee_velocity_controller:
+#       type: forward_command_controller/ForwardCommandController
+#       ros__parameters:
+#         joints:
+#           - knee
+#         interface_name: velocity
+#         command_interfaces:
+#           - velocity
+#         state_interfaces:
+#           - velocity
+
+
+# controller_manager:
+#  ros__parameters:
+#   update_rate: 100
+
+#   joint_trajectory_controller:
+#     type: joint_trajectory_controller/JointTrajectoryController
+
+#   #broadcaste the state
+#   joint_state_broadcaster:
+#     type: joint_state_broadcaster/JointStateBroadcaster
+
+#   #joint_trajectory_controller:
+#   #  type: joint_trajectory_controller/JointTrajectoryController
+
+#   forward_position_controller:
+#     type: forward_command_controller/ForwardCommandController
+#   forward_velocity_controller:
+#     type: forward_command_controller/ForwardCommandController
+
+
+# forward_position_controller:
+#   ros__parameters:
+#    joints:
+#     - crutch_joint__imu_position #joint the controller will control
+#    interface_name: position       #same name as defined in the sdf/urdf file
+#    command_interfaces:
+#      - position                   # 
+#   state_interfaces:
+#     - position
+#     - velocity
+
+# forward_velocity_controller:
+#   ros__parameters:
+#    joints:
+#     - crutch_joint__imu_position
+#     interface_name: velocity
+#     command_interfaces:
+#      - velocity
+#    state_interfaces:
+#     - velocity
+
+
+# controller_manager:
+#   ros__parameters:
+#     joint_state_controller:
+#       type: joint_state_controller/JointStateController
+#       autoactivate: true
+#     knee_effort_controller:
+#       type: effort_controllers/JointEffortController
+#       joint: knee
+#       autoactivate: true
+
+# simple_leg_robot:
+#   ros__parameters:
+#     joint_state_controller:
+#       type: joint_state_controller/JointStateController
+#     knee_effort_controller:
+#       type: effort_controllers/JointEffortController
+#       joint: knee
+#       interface_name: effort

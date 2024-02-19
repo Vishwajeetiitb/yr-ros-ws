@@ -4,7 +4,7 @@
 #include <chrono>
 #include <cmath>  // For std::sin
 #include <fstream>
-#include "pb2ros_converter.h"
+// #include "pb2ros_converter.h"
 #include "yr_lle_msgs/msg/joint_cmd.hpp"
 #include "yr_lle_msgs/msg/joint_state.hpp"
 
@@ -54,12 +54,12 @@ class McuBridgeRosNode : public rclcpp::Node {
     joint_cmd_publisher_ = this->create_publisher<yr_lle_msgs::msg::JointCmd>("/joint_cmd", 10);
 
     // Publish a single message for testing
-    auto test_msg = yr_lle_msgs::msg::JointCmd();
-    test_msg.cmd = 1.0;
-    test_msg.cmd_type = yr_lle_msgs::msg::JointCmd::POSITION;
-    test_msg.joint = yr_lle_msgs::msg::JointCmd::HIP;
-    test_msg.side = yr_lle_msgs::msg::JointCmd::RIGHT;
-    joint_cmd_publisher_->publish(test_msg);
+    // auto test_msg = yr_lle_msgs::msg::JointCmd();
+    // test_msg.cmd = 1.0;
+    // test_msg.cmd_type = yr_lle_msgs::msg::JointCmd::POSITION;
+    // test_msg.joint = yr_lle_msgs::msg::JointCmd::HIP;
+    // test_msg.side = yr_lle_msgs::msg::JointCmd::RIGHT;
+    // joint_cmd_publisher_->publish(test_msg);
 
     spi_driver_.EnableSimulation(true);
     // spi_driver.EnableSimulation(false);

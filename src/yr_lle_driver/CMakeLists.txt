@@ -31,8 +31,8 @@ endif()
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
-set(SPI_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../yr_sdk/src")
-add_custom_target(run_proto_compile COMMAND ${CMAKE_COMMAND} -E chdir ${SPI_LIB_DIR}/protobuf ./compile_protobuf.sh)
+set(YR_SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../yr_sdk/src")
+add_custom_target(run_proto_compile COMMAND ${CMAKE_COMMAND} -E chdir ${YR_SDK_DIR}/protobuf ./compile_protobuf.sh)
 
 # add_compile_options(-Wno-reorder -Wno-unused-variable -Wno-vla -Wno-designated-init)
 add_compile_options(-Wno-reorder -Wno-unused-variable
@@ -42,19 +42,20 @@ add_compile_options(-Wno-reorder -Wno-unused-variable
 
 include_directories(
   include
-  ${SPI_LIB_DIR}
-  ${SPI_LIB_DIR}/protobuf
+  ${YR_SDK_DIR}
+  ${YR_SDK_DIR}/protobuf
 )
 
-file(GLOB SPI_SRC
-  "${SPI_LIB_DIR}/*.cpp"
-  "${SPI_LIB_DIR}/protobuf/*.cc"
+file(GLOB YR_SDK_SRC_FILES
+  "${YR_SDK_DIR}/*.cpp"
+  "${YR_SDK_DIR}/protobuf/*.cc"
 )
 
-# list(REMOVE_ITEM SPI_SRC "${SPI_LIB_DIR}/spi_test.cpp")
-list(FILTER SPI_SRC EXCLUDE REGEX ".*test\\.cpp$")
+# list(REMOVE_ITEM YR_SDK_SRC_FILES "${YR_SDK_DIR}/spi_test.cpp")
+list(FILTER YR_SDK_SRC_FILES EXCLUDE REGEX ".*test\\.cpp$")
+list(REMOVE_ITEM YR_SDK_SRC_FILES "${YR_SDK_DIR}/pb2ros_converter.cpp")
 
-message(STATUS "SPI_SRC: ${SPI_SRC}")
+message(STATUS "YR_SDK_SRC_FILES: ${YR_SDK_SRC_FILES}")
 
 set(NODES
   mcu_bridge_ros_node
@@ -65,8 +66,8 @@ set(NODES
 foreach(NODE ${NODES})
   add_executable(${NODE}
     src/${NODE}.cpp
-    ${SPI_SRC}
-    ${SPI_LIB_DIR}/protobuf/exo_data.pb.cc
+    ${YR_SDK_SRC_FILES}
+    ${YR_SDK_DIR}/protobuf/exo_data.pb.cc
   )
   ament_target_dependencies(${NODE} rclcpp geometry_msgs yr_lle_msgs sensor_msgs)
   add_dependencies(${NODE} run_proto_compile)

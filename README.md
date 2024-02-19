@@ -1,4 +1,4 @@
-# `yr-ros-ws` 
+## `yr-ros-ws` 
 
 ## Packages
 
@@ -67,10 +67,27 @@ source install/setup.bash
 
 ```bash
 colcon build && ros2 launch yr_lle_sim rviz.launch.py
-ros2 launch yr_lle_sim model.launch.py
+ros2 launch yr_lle_sim rviz_model.launch.py
 ```
 
 ![](./src/yr_lle_sim/media/rviz_lle.png)
+
+---
+
+### Running Simulation
+
+```bash
+# Install dependencies
+sudo apt install ros-<distro>-xacro -y
+# Build packages
+colcon build 
+# Terminal 1
+ros2 launch yr_lle_sim gazebo.launch.py
+# Terminal 2
+ros2 launch yr_lle_sim gazebo_model.launch.py
+```
+
+![](./src/yr_lle_sim/media/gazebo_lle.png)
 
 ---
 

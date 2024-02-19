@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<robot name="lower_limb_exoskeleton" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="properties.xacro" />
+    <xacro:include filename="macros.xacro" />
+
+    <!-- <xacro:property name="thigh_mesh" value="" />
+    <xacro:property name="shank_mesh" value="" />
+    <xacro:property name="foot_mesh" value="" /> -->
+
+    <!-- <xacro:property name="thigh_mesh" value="package://yr_lle_sim/urdf/meshes_yr/exo_thigh.dae"
+    /> -->
+    <!-- <xacro:property name="thigh_mesh"
+    value="/home/user/gitlab/yr-soc-ws/ros-ws/src/yr_lle_sim/urdf/meshes_yr/exo_thigh.dae" /> -->
+    <!-- <xacro:property name="thigh_mesh"
+    value="/home/user/gitlab/yr-soc-ws/ros-ws/src/yr_lle_sim/urdf/meshes_yr/exo_thigh.STL" /> -->
+    <!-- <xacro:property name="thigh_mesh" value="file://$(find
+    yr_lle_sim)/urdf/meshes_yr/exo_thigh.STL" /> -->
+    <!-- <xacro:property name="shank_mesh" value="package://yr_lle_sim/urdf/meshes_yr/exo_shank.dae"
+    />
+    <xacro:property name="foot_mesh" value="package://yr_lle_sim/urdf/meshes_yr/exo_foot.dae" /> -->
+
+    <!-- ======================================================= -->
+    <!-- LINKS                                                   -->
+    <!-- ======================================================= -->
+    <xacro:create_link name="waist_link" m="${waist_m}" l="${waist_l}"
+        w="${waist_w}" h="${waist_h}" mat="${waist_mat}" />
+
+    <xacro:create_link2 name="l_thigh_link" m="${thigh_m}" l="${thigh_l}" w="${thigh_w}"
+        h="${thigh_h}" o_x="${thigh_w}" o_y="${thigh_w/2}" o_z="${-thigh_l}" o_r="0" o_p="0"
+        o_yaw="${PI}" mat="${thigh_mat}" mesh_filename="${thigh_mesh}" mirror="1" />
+    <xacro:create_link2 name="l_calf_link" m="${calf_m}" l="${calf_l}" w="${calf_w}"
+        h="${calf_h}" o_x="${calf_w}" o_y="${calf_w/2}" o_z="${-calf_l}" o_r="0" o_p="0"
+        o_yaw="${PI}"
+        mat="${calf_mat}" mesh_filename="${shank_mesh}" mirror="1" />
+    <xacro:create_link2 name="l_foot_link" m="${foot_m}" l="${foot_l}" w="${foot_w}"
+        h="${foot_h}" o_x="${-foot_h}" o_y="${foot_w}" o_z="${-foot_l}" o_r="0" o_p="0" o_yaw="0"
+        mat="${foot_mat}"
+        mesh_filename="${foot_mesh}" mirror="-1" />
+
+    <xacro:create_link2 name="r_thigh_link" m="${thigh_m}" l="${thigh_l}" w="${thigh_w}"
+        h="${thigh_h}" o_x="${-thigh_w}" o_y="${-thigh_w/2}" o_z="${-thigh_l}" o_r="0" o_p="0"
+        o_yaw="0" mat="${thigh_mat}" mesh_filename="${thigh_mesh}" mirror="1" />
+    <xacro:create_link2 name="r_calf_link" m="${calf_m}" l="${calf_l}" w="${calf_w}"
+        h="${calf_h}" o_x="${-calf_w}" o_y="${-calf_w/2}" o_z="${-calf_l}" o_r="0" o_p="0" o_yaw="0"
+        mat="${calf_mat}" mesh_filename="${shank_mesh}" mirror="1" />
+    <xacro:create_link2 name="r_foot_link" m="${foot_m}" l="${foot_l}" w="${foot_w}"
+        h="${foot_h}" o_x="${-foot_h}" o_y="${-foot_w}" o_z="${-foot_l}" o_r="0" o_p="0" o_yaw="0"
+        mat="${foot_mat}"
+        mesh_filename="${foot_mesh}" mirror="1" />
+
+    <!-- ======================================================= -->
+    <!-- JOINTS                                                  -->
+    <!-- ======================================================= -->
+    <xacro:macro name="create_leg" params="side origin_y">
+        <xacro:create_joint name="${side}_hip_joint" parent="waist_link" child="${side}_thigh_link"
+            origin_x="0" origin_y="${origin_y}" origin_z="0" o_roll="0" o_pitch="0" o_yaw="0"
+            axis_x="0" axis_y="1" axis_z="0"
+            lower_limit="-${PI}" upper_limit="${PI}" effort="100000" velocity="100.0" />
+        <xacro:create_joint name="${side}_knee_joint" parent="${side}_thigh_link"
+            child="${side}_calf_link"
+            origin_x="0" origin_y="0" origin_z="${-thigh_l}" o_roll="0" o_pitch="0" o_yaw="0"
+            axis_x="0" axis_y="1" axis_z="0"
+            lower_limit="-${PI}" upper_limit="${PI}" effort="100000" velocity="100.0" />
+        <xacro:create_joint name="${side}_ankle_joint" parent="${side}_calf_link"
+            child="${side}_foot_link"
+            origin_x="0" origin_y="0" origin_z="${-calf_l}" o_roll="0" o_pitch="${-PI/2}" o_yaw="0"
+            axis_x="0" axis_y="1" axis_z="0"
+            lower_limit="-1.75" upper_limit="1.75" effort="1000" velocity="10.0" />
+    </xacro:macro>
+
+    <xacro:create_leg side="l" origin_y="${waist_w / 2}" />
+    <xacro:create_leg side="r" origin_y="${-waist_w / 2}" />
+
+    <!-- ======================================================= -->
+    <!-- GAZEBO                                                  -->
+    <!-- ======================================================= -->
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <parameters>$(find yr_lle_sim)/config/control.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <ros2_control name="MyRobotHardware" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+        <joint name="l_hip_joint">
+            <commandInterface>effort</commandInterface>
+            <stateInterface>position</stateInterface>
+            <stateInterface>velocity</stateInterface>
+            <stateInterface>effort</stateInterface>
+        </joint>
+        <joint name="l_knee_joint">
+            <commandInterface>effort</commandInterface>
+            <stateInterface>position</stateInterface>
+            <stateInterface>velocity</stateInterface>
+            <stateInterface>effort</stateInterface>
+        </joint>
+    </ros2_control>
+
+    <xacro:define_gazebo_material link_name="l_thigh_link" r="0.7" g="0.7" b="0.7" a="1" />
+    <xacro:define_gazebo_material link_name="r_thigh_link" r="0.7" g="0.7" b="0.7" a="1" />
+    <xacro:define_gazebo_material link_name="l_calf_link" r="0.8" g="0.8" b="0.8" a="1" />
+    <xacro:define_gazebo_material link_name="r_calf_link" r="0.8" g="0.8" b="0.8" a="1" />
+    <xacro:define_gazebo_material link_name="l_foot_link" r="0.7" g="0.7" b="0.7" a="1" />
+    <xacro:define_gazebo_material link_name="r_foot_link" r="0.7" g="0.7" b="0.7" a="1" />
+
+    <xacro:define_gazebo_material link_name="stand_base" r="0.4" g="0.4" b="0.4" a="0.5" />
+    <xacro:define_gazebo_material link_name="support_pole" r="0.4" g="0.4" b="0.4" a="0.5" />
+    <xacro:define_gazebo_material link_name="waist_link" r="0.4" g="0.4" b="0.4" a="0.5" />
+
+    <xacro:macro name="create_leg_transmissions" params="side">
+        <xacro:create_transmission joint_name="${side}_hip_joint" />
+        <xacro:create_transmission joint_name="${side}_knee_joint" />
+        <!-- <xacro:create_transmission joint_name="${side}_ankle_joint" /> -->
+    </xacro:macro>
+
+    <!-- <xacro:create_leg_transmissions side="l" />
+    <xacro:create_leg_transmissions side="r" /> -->
+
+    <link name="stand_base">
+        <visual>
+            <geometry>
+                <box size="${stand_base_width} ${stand_base_depth} ${stand_base_height}" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${stand_base_width} ${stand_base_depth} ${stand_base_height}" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="10.0" /> <!-- Heavier mass to ensure stability -->
+            <inertia ixx="1" iyy="1" izz="1" ixy="0" ixz="0" iyz="0" />
+        </inertial>
+    </link>
+
+    <!-- Pole Link (Supporting Pole) -->
+    <link name="support_pole">
+        <visual>
+            <geometry>
+                <cylinder length="${pole_height}" radius="${pole_radius}" /> <!-- Variable height for
+                the pole -->
+            </geometry>
+            <material name="silver" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${pole_height}" radius="${pole_radius}" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.0" />
+            <inertia ixx="0.1" iyy="0.1" izz="0.1" ixy="0" ixz="0" iyz="0" />
+        </inertial>
+    </link>
+
+    <!-- Joint connecting the stand base to the supporting pole -->
+    <joint name="base_to_pole" type="fixed">
+        <parent link="stand_base" />
+        <child link="support_pole" />
+        <origin xyz="0 0 ${pole_height / 2}" />
+    </joint>
+
+    <!-- Joint connecting the supporting pole to the waist -->
+    <joint name="pole_to_waist" type="fixed">
+        <parent link="support_pole" />
+        <child link="waist_link" />
+        <origin xyz="0 0 ${pole_height / 2 }" />
+    </joint>
+
+    <!-- Use the macro to add IMU sensors to specific links -->
+    <xacro:add_imu_sensor link_name="l_thigh_link" />
+    <xacro:add_imu_sensor link_name="r_thigh_link" />
+    <xacro:add_imu_sensor link_name="l_calf_link" />
+    <xacro:add_imu_sensor link_name="r_calf_link" />
+    <xacro:add_imu_sensor link_name="l_foot_link" />
+    <xacro:add_imu_sensor link_name="r_foot_link" />
+
+</robot>

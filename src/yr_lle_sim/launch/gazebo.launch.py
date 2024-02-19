@@ -11,20 +11,13 @@ def generate_launch_description():
     pkg_dir = get_package_share_directory('yr_lle_sim')
     xacro_file = os.path.join(pkg_dir, 'urdf', 'exo.xacro')
 
-    # Convert xacro to URDF
-    robot_description = {'robot_description': Command(['xacro ', xacro_file])}
+    # Define the path to the world file
+    world_file_path = os.path.join(pkg_dir, 'worlds', 'empty.world')
 
     # Gazebo launch command
     gazebo = ExecuteProcess(
-        cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so'],
-        output='screen'
-    )
-
-    # Spawn robot model in Gazebo
-    spawn_entity = Node(
-        package='gazebo_ros', executable='spawn_entity.py',
-        arguments=['-entity', 'your_robot_model',
-                   '-topic', 'robot_description'],
+        cmd=['gazebo', '--verbose', '-s',
+             'libgazebo_ros_factory.so', '-world', world_file_path],
         output='screen'
     )
 
@@ -33,10 +26,5 @@ def generate_launch_description():
             'xacro_file', default_value=xacro_file,
             description='Path to robot xacro file'
         ),
-        # DeclareLaunchArgument(
-        #     'use_sim_time',
-        #     default_value='true',
-        #     description='Use sim time if true'),
         gazebo,
-        # spawn_entity
     ])

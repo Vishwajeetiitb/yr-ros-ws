@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<robot name="simple_leg_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Define Materials -->
+    <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0" />
+    </material>
+
+    <!-- Thigh Link -->
+    <link name="thigh">
+        <visual>
+            <geometry>
+                <cylinder length="0.4" radius="0.05" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.4" radius="0.05" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.0" /> <!-- Mass in kilograms -->
+            <origin xyz="0 0 0" /> <!-- Center of mass relative to the link frame -->
+            <inertia ixx="0.1" iyy="0.1" izz="0.1" ixy="0" ixz="0" iyz="0" /> <!-- Inertia tensor
+            components -->
+        </inertial>
+        <gazebo>
+            <material>Gazebo/White</material>
+        </gazebo>
+    </link>
+
+    <!-- Shank Link -->
+    <link name="shank">
+        <visual>
+            <geometry>
+                <cylinder length="0.4" radius="0.05" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.4" radius="0.05" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1.0" /> <!-- Mass in kilograms -->
+            <origin xyz="0 0 0" /> <!-- Center of mass relative to the link frame -->
+            <inertia ixx="0.1" iyy="0.1" izz="0.1" ixy="0" ixz="0" iyz="0" /> <!-- Inertia tensor
+            components -->
+        </inertial>
+        <gazebo>
+            <material>Gazebo/White</material>
+        </gazebo>
+    </link>
+
+    <!-- Knee Joint -->
+    <joint name="knee" type="revolute">
+        <parent link="thigh" />
+        <child link="shank" />
+        <origin xyz="0 0 -0.2" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+        <limit lower="-1.57" upper="0" effort="100" velocity="0.5" />
+        <gazebo>
+            <limit effort="100" velocity="0.5" />
+            <dynamics damping="0.01" />
+        </gazebo>
+    </joint>
+
+    <!-- Gazebo plugin for control -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
+
+    <transmission name="knee_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="knee">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="knee_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+</robot>
