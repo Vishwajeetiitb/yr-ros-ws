@@ -68,6 +68,7 @@ foreach(NODE ${NODES})
     src/${NODE}.cpp
     ${YR_SDK_SRC_FILES}
     ${YR_SDK_DIR}/protobuf/exo_data.pb.cc
+    ${YR_SDK_DIR}/topic_manager_converter_functions.cpp
   )
   ament_target_dependencies(${NODE} rclcpp geometry_msgs yr_lle_msgs sensor_msgs)
   add_dependencies(${NODE} run_proto_compile)

@@ -47,11 +47,11 @@ class McuBridgeRosNode : public rclcpp::Node {
     //   RCLCPP_ERROR(this->get_logger(), "Failed to open file: %s", filename_.c_str());
     // }
 
-    joint_cmd_subscriber_ = this->create_subscription<yr_lle_msgs::msg::JointCmd>(
-        "/joint_cmd", 10, std::bind(&McuBridgeRosNode::jointCmdCallback, this, std::placeholders::_1));
+    // joint_cmd_subscriber_ = this->create_subscription<yr_lle_msgs::msg::JointCmd>(
+    //     "/joint_cmd", 10, std::bind(&McuBridgeRosNode::jointCmdCallback, this, std::placeholders::_1));
 
-    // Initialize publisher
-    joint_cmd_publisher_ = this->create_publisher<yr_lle_msgs::msg::JointCmd>("/joint_cmd", 10);
+    // // Initialize publisher
+    // joint_cmd_publisher_ = this->create_publisher<yr_lle_msgs::msg::JointCmd>("/joint_cmd", 10);
 
     // Publish a single message for testing
     // auto test_msg = yr_lle_msgs::msg::JointCmd();
@@ -85,10 +85,11 @@ class McuBridgeRosNode : public rclcpp::Node {
 
   void Init() {
     topicManager_ = std::make_unique<TopicManager>(shared_from_this());
-    // topicManager_->CreateDescVarContainers(true);
-    topicManager_->CreateDescVarContainers(descVarContainers, TopicManager::MsgType::Imu, true);
-    topicManager_->CreateDescVarContainers(descVarContainers, TopicManager::MsgType::JointState, true);
-    // topicManager_->CreateImuDescVarContainers(descVarContainers, true);
+    topicManager_->CreateDescVarContainers(descVarContainers, SMF::RosTopicType::ros_imu, true);
+    topicManager_->CreateDescVarContainers(descVarContainers, SMF::RosTopicType::ros_joint_state, true);
+    // Since JointCmd should be a subscriber, set is_publisher to false for JointCmd
+    topicManager_->CreateDescVarContainers(descVarContainers, SMF::RosTopicType::ros_joint_cmd, false);
+
     topicManager_->PrintDescVarsList(descVarContainers);
 
     // test incoming desc var from MockMcu
@@ -125,16 +126,16 @@ class McuBridgeRosNode : public rclcpp::Node {
   }
 
  private:
-  void jointCmdCallback(const yr_lle_msgs::msg::JointCmd::SharedPtr msg) {
-    exoskeleton::JointCmd pb_msg;
-    Pb2RosConverter::ConvertRos2Pb(*msg, pb_msg);
-    printPbMsg(pb_msg);
-  }
+  // void jointCmdCallback(const yr_lle_msgs::msg::JointCmd::SharedPtr msg) {
+  //   exoskeleton::JointCmd pb_msg;
+  //   Pb2RosConverter::ConvertRos2Pb(*msg, pb_msg);
+  //   printPbMsg(pb_msg);
+  // }
 
-  void printPbMsg(const exoskeleton::JointCmd& pb_msg) {
-    RCLCPP_INFO(this->get_logger(), "Protobuf JointCmd: Cmd: %f, Cmd Type: %d, Joint: %d, Side: %d", pb_msg.cmd(),
-                pb_msg.cmd_type(), pb_msg.joint(), pb_msg.side());
-  }
+  // void printPbMsg(const exoskeleton::JointCmd& pb_msg) {
+  //   RCLCPP_INFO(this->get_logger(), "Protobuf JointCmd: Cmd: %f, Cmd Type: %d, Joint: %d, Side: %d", pb_msg.cmd(),
+  //               pb_msg.cmd_type(), pb_msg.joint(), pb_msg.side());
+  // }
 
   void sendSpiData() {
     std::vector<uint8_t> testData(data_size_, 0xAA);
@@ -152,7 +153,7 @@ class McuBridgeRosNode : public rclcpp::Node {
     high_freq_counter_++;
     // Print every 100th call (10 Hz)
     if (high_freq_counter_ % 10 == 0) {
-      TestProcessIncomingDescVarArray();
+      // TestProcessIncomingDescVarArray();
     }
     if (high_freq_counter_ % 100 == 0) {
       // RCLCPP_INFO(this->get_logger(), "High Frequency Task: 10 Hz print");
@@ -167,8 +168,8 @@ class McuBridgeRosNode : public rclcpp::Node {
     // TestProcessIncomingDescVarArray();
   }
 
-  rclcpp::Subscription<yr_lle_msgs::msg::JointCmd>::SharedPtr joint_cmd_subscriber_;
-  rclcpp::Publisher<yr_lle_msgs::msg::JointCmd>::SharedPtr joint_cmd_publisher_;
+  // rclcpp::Subscription<yr_lle_msgs::msg::JointCmd>::SharedPtr joint_cmd_subscriber_;
+  // rclcpp::Publisher<yr_lle_msgs::msg::JointCmd>::SharedPtr joint_cmd_publisher_;
   rclcpp::TimerBase::SharedPtr timer_1000hz_;
   rclcpp::TimerBase::SharedPtr timer_1hz_;
   std::vector<std::unique_ptr<DescVarContainerBase>> descVarContainers;
