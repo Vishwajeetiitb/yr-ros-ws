@@ -29,10 +29,10 @@
     <xacro:create_link2 name="l_thigh_link" m="${thigh_m}" l="${thigh_l}" w="${thigh_w}"
         h="${thigh_h}" o_x="${thigh_w}" o_y="${thigh_w/2}" o_z="${-thigh_l}" o_r="0" o_p="0"
         o_yaw="${PI}" mat="${thigh_mat}" mesh_filename="${thigh_mesh}" mirror="1" />
-    <xacro:create_link2 name="l_calf_link" m="${calf_m}" l="${calf_l}" w="${calf_w}"
-        h="${calf_h}" o_x="${calf_w}" o_y="${calf_w/2}" o_z="${-calf_l}" o_r="0" o_p="0"
+    <xacro:create_link2 name="l_shank_link" m="${shank_m}" l="${shank_l}" w="${shank_w}"
+        h="${shank_h}" o_x="${shank_w}" o_y="${shank_w/2}" o_z="${-shank_l}" o_r="0" o_p="0"
         o_yaw="${PI}"
-        mat="${calf_mat}" mesh_filename="${shank_mesh}" mirror="1" />
+        mat="${shank_mat}" mesh_filename="${shank_mesh}" mirror="1" />
     <xacro:create_link2 name="l_foot_link" m="${foot_m}" l="${foot_l}" w="${foot_w}"
         h="${foot_h}" o_x="${-foot_h}" o_y="${foot_w}" o_z="${-foot_l}" o_r="0" o_p="0" o_yaw="0"
         mat="${foot_mat}"
@@ -41,9 +41,9 @@
     <xacro:create_link2 name="r_thigh_link" m="${thigh_m}" l="${thigh_l}" w="${thigh_w}"
         h="${thigh_h}" o_x="${-thigh_w}" o_y="${-thigh_w/2}" o_z="${-thigh_l}" o_r="0" o_p="0"
         o_yaw="0" mat="${thigh_mat}" mesh_filename="${thigh_mesh}" mirror="1" />
-    <xacro:create_link2 name="r_calf_link" m="${calf_m}" l="${calf_l}" w="${calf_w}"
-        h="${calf_h}" o_x="${-calf_w}" o_y="${-calf_w/2}" o_z="${-calf_l}" o_r="0" o_p="0" o_yaw="0"
-        mat="${calf_mat}" mesh_filename="${shank_mesh}" mirror="1" />
+    <xacro:create_link2 name="r_shank_link" m="${shank_m}" l="${shank_l}" w="${shank_w}"
+        h="${shank_h}" o_x="${-shank_w}" o_y="${-shank_w/2}" o_z="${-shank_l}" o_r="0" o_p="0" o_yaw="0"
+        mat="${shank_mat}" mesh_filename="${shank_mesh}" mirror="1" />
     <xacro:create_link2 name="r_foot_link" m="${foot_m}" l="${foot_l}" w="${foot_w}"
         h="${foot_h}" o_x="${-foot_h}" o_y="${-foot_w}" o_z="${-foot_l}" o_r="0" o_p="0" o_yaw="0"
         mat="${foot_mat}"
@@ -57,14 +57,14 @@
             origin_x="0" origin_y="${origin_y}" origin_z="0" o_roll="0" o_pitch="0" o_yaw="0"
             axis_x="0" axis_y="1" axis_z="0"
             lower_limit="-${PI}" upper_limit="${PI}" effort="100000" velocity="100.0" />
-        <xacro:create_joint name="${side}_knee_joint" parent="${side}_thigh_link"
-            child="${side}_calf_link"
+        <xacro:create_joint name="${side}_kne_joint" parent="${side}_thigh_link"
+            child="${side}_shank_link"
             origin_x="0" origin_y="0" origin_z="${-thigh_l}" o_roll="0" o_pitch="0" o_yaw="0"
             axis_x="0" axis_y="1" axis_z="0"
             lower_limit="-${PI}" upper_limit="${PI}" effort="100000" velocity="100.0" />
-        <xacro:create_joint name="${side}_ankle_joint" parent="${side}_calf_link"
+        <xacro:create_joint name="${side}_ank_joint" parent="${side}_shank_link"
             child="${side}_foot_link"
-            origin_x="0" origin_y="0" origin_z="${-calf_l}" o_roll="0" o_pitch="${-PI/2}" o_yaw="0"
+            origin_x="0" origin_y="0" origin_z="${-shank_l}" o_roll="0" o_pitch="${-PI/2}" o_yaw="0"
             axis_x="0" axis_y="1" axis_z="0"
             lower_limit="-1.75" upper_limit="1.75" effort="1000" velocity="10.0" />
     </xacro:macro>
@@ -91,7 +91,7 @@
             <stateInterface>velocity</stateInterface>
             <stateInterface>effort</stateInterface>
         </joint>
-        <joint name="l_knee_joint">
+        <joint name="l_kne_joint">
             <commandInterface>effort</commandInterface>
             <stateInterface>position</stateInterface>
             <stateInterface>velocity</stateInterface>
@@ -101,8 +101,8 @@
 
     <xacro:define_gazebo_material link_name="l_thigh_link" r="0.7" g="0.7" b="0.7" a="1" />
     <xacro:define_gazebo_material link_name="r_thigh_link" r="0.7" g="0.7" b="0.7" a="1" />
-    <xacro:define_gazebo_material link_name="l_calf_link" r="0.8" g="0.8" b="0.8" a="1" />
-    <xacro:define_gazebo_material link_name="r_calf_link" r="0.8" g="0.8" b="0.8" a="1" />
+    <xacro:define_gazebo_material link_name="l_shank_link" r="0.8" g="0.8" b="0.8" a="1" />
+    <xacro:define_gazebo_material link_name="r_shank_link" r="0.8" g="0.8" b="0.8" a="1" />
     <xacro:define_gazebo_material link_name="l_foot_link" r="0.7" g="0.7" b="0.7" a="1" />
     <xacro:define_gazebo_material link_name="r_foot_link" r="0.7" g="0.7" b="0.7" a="1" />
 
@@ -112,8 +112,8 @@
 
     <xacro:macro name="create_leg_transmissions" params="side">
         <xacro:create_transmission joint_name="${side}_hip_joint" />
-        <xacro:create_transmission joint_name="${side}_knee_joint" />
-        <!-- <xacro:create_transmission joint_name="${side}_ankle_joint" /> -->
+        <xacro:create_transmission joint_name="${side}_kne_joint" />
+        <!-- <xacro:create_transmission joint_name="${side}_ank_joint" /> -->
     </xacro:macro>
 
     <!-- <xacro:create_leg_transmissions side="l" />
@@ -174,8 +174,8 @@
     <!-- Use the macro to add IMU sensors to specific links -->
     <xacro:add_imu_sensor link_name="l_thigh_link" />
     <xacro:add_imu_sensor link_name="r_thigh_link" />
-    <xacro:add_imu_sensor link_name="l_calf_link" />
-    <xacro:add_imu_sensor link_name="r_calf_link" />
+    <xacro:add_imu_sensor link_name="l_shank_link" />
+    <xacro:add_imu_sensor link_name="r_shank_link" />
     <xacro:add_imu_sensor link_name="l_foot_link" />
     <xacro:add_imu_sensor link_name="r_foot_link" />
 

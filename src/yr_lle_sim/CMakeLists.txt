@@ -13,6 +13,16 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(yr_lle_msgs REQUIRED)
+find_program(CCACHE_FOUND ccache) # This is used on SoC to speed up build process
+if(CCACHE_FOUND)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif()
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+endif()
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -28,5 +38,6 @@ install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY urdf DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY rviz DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY worlds DESTINATION share/${PROJECT_NAME})
 
 ament_package()

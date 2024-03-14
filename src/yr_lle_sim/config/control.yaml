@@ -20,7 +20,7 @@ forward_position_controller2:
     # pid: {p: 1000.0, i: 0.0, d: 10.0}
     joints:
       - l_hip_joint
-      - l_knee_joint
+      - l_kne_joint
     interface_name: position
     command_interfaces:
       - position

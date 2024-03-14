@@ -24,6 +24,8 @@ class JointStatePublisher(Node):
         self.ankle_offset = math.pi * 0.5
         self.get_logger().info('Initialized [publish_joint_states] JointStatePublisher')
         self.step_count = 0
+        self.time_start = self.get_clock().now().nanoseconds 
+        # self.publish_joint_states()
         
     def get_new_angles(self):
         steps = len(self.wd.list)
@@ -39,13 +41,14 @@ class JointStatePublisher(Node):
         # print(f"{TAG}: R:[{self.step_count}][1],h:{ang2.h},k:{ang2.k},a:{ang2.a}[{ankle_offset + ang2.a}]")
         
         return [ang, ang2] 
-
-    def timer_callback(self):
+    
+    def publish_joint_states(self):
         angles = self.get_new_angles() 
         for i, side in enumerate(['l', 'r']):
             joint_state = JointState()
             joint_state.header.stamp = self.get_clock().now().to_msg()
-            joint_state.name = [f'{side}_hip_joint', f'{side}_knee_joint', f'{side}_ankle_joint']
+            # joint_state.name = [f'{side}_hip_joint', f'{side}_kne_joint', f'{side}_ank_joint']
+            joint_state.name = [f'{side}_pel_joint', f'{side}_hip_joint', f'{side}_kne_joint', f'{side}_ank_joint']
            
             # simulated walking data 
             ang = angles[i]
@@ -53,7 +56,38 @@ class JointStatePublisher(Node):
             c = -1
             h_o = -0.0
             k_o = 0.0
-            joint_state.position = [h_o + ang.h * c, ang.k * -c, ang.a * c + self.ankle_offset] 
+            pel_mag = 0.3
+            
+            current_time = self.get_clock().now().nanoseconds
+            time_difference = (current_time - self.time_start) / 1e9  # Convert nanoseconds to seconds
+            # Sine wave function of time difference, period is 3 seconds for a full cycle (2*pi)
+            period = 1.0  # Period of 3 seconds
+            frequency = 1 / period  # Frequency in Hz
+            mag = 0.15
+            # pel_mag = mag * 0.5 * (1 + math.sin(2 * math.pi * frequency * time_difference))
+           
+            repeat_period = 3.0 # Repeat the oscillation every n seconds 
+            time_block = time_difference % repeat_period 
+            # Check if within the first 3 seconds of the current block
+            if time_block <= period:
+                # Within the period, perform the oscillation
+                # Map the elapsed time in the block to a phase from 0 to pi
+                # phase = math.pi * time_block / 3.0  # Scale for a 3-second period
+                # # Calculate the oscillation from 0 -> 1 -> 0
+                # pel_mag = math.sin(phase)
+                sine_wave_val = 1 + math.sin(-math.pi/2.0+ 2 * math.pi * frequency * time_block)
+                pel_mag = mag * 0.5 * sine_wave_val
+                # print(f'time_block: {time_block:.2f}, sine_wave_val: {sine_wave_val:.2f}, pel_mag: {pel_mag:.2f}')
+            else:
+                pel_mag = 0.0
+            
+            
+            # pel_angle is magnitude times 1 if left, -1 if right
+            pel_angle = pel_mag if side == 'l' else -pel_mag 
+            if side == 'r':
+                pel_angle = 0.0
+            # pel_angle = 0.0
+            joint_state.position = [pel_angle, h_o + ang.h * c, ang.k * -c, ang.a * c + self.ankle_offset] 
             # if i == 1:
             #     joint_state.position = [0, 0, 0] 
           
@@ -68,6 +102,10 @@ class JointStatePublisher(Node):
 
             self.publisher_.publish(joint_state)
             self.angle += 0.01
+
+    def timer_callback(self):
+        # pass
+        self.publish_joint_states()
 
 def main(args=None):
     rclpy.init(args=args)

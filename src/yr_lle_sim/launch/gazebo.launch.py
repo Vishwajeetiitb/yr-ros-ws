@@ -12,7 +12,8 @@ def generate_launch_description():
     xacro_file = os.path.join(pkg_dir, 'urdf', 'exo.xacro')
 
     # Define the path to the world file
-    world_file_path = os.path.join(pkg_dir, 'worlds', 'empty.world')
+    # world_file_path = os.path.join(pkg_dir, 'worlds', 'empty.world')
+    world_file_path = os.path.join(pkg_dir, 'worlds', 'exoskeleton.world')
 
     # Gazebo launch command
     gazebo = ExecuteProcess(

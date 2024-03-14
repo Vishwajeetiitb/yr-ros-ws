@@ -66,7 +66,7 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        l_calf_link:
+        l_shank_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -81,7 +81,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        r_calf_link:
+        r_shank_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -114,13 +114,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        l_calf_link:
+        l_shank_link:
           Value: true
         l_foot_link:
           Value: true
         l_thigh_link:
           Value: true
-        r_calf_link:
+        r_shank_link:
           Value: true
         r_foot_link:
           Value: true
@@ -136,11 +136,11 @@ Visualization Manager:
       Tree:
         waist_link:
           l_thigh_link:
-            l_calf_link:
+            l_shank_link:
               l_foot_link:
                 {}
           r_thigh_link:
-            r_calf_link:
+            r_shank_link:
               r_foot_link:
                 {}
       Update Interval: 0
