@@ -23,8 +23,13 @@ Optional:
 cd yr-ros-ws
 colcon build
 source install/setup.bash
-# echo "source <path-to-yr-ros-ws>/install/setup.bash" >> ~/.bashrc
-# source ~/.bashrc
+```
+
+Add to the bottom of your ~/.bashrc:
+
+```bash
+source /opt/ros/iron/setup.bash
+[[ -e <path-to-yr-ros-ws>/install/setup.bash ]] && source <path-to-yr-ros-ws>/install/setup.bash
 ```
 
 ---
@@ -33,24 +38,24 @@ source install/setup.bash
 
 | Topic                     | Message Type                        | Max Data Rate |
 |---------------------------|-------------------------------------|---------------|
-| `/l/ank/motor/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
-| `/l/ank/motor/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
-| `/l/ank/motor/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
-| `/l/hip/motor/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
-| `/l/hip/motor/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
-| `/l/hip/motor/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
-| `/l/kne/motor/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
-| `/l/kne/motor/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
-| `/l/kne/motor/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
-| `/r/ank/motor/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
-| `/r/ank/motor/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
-| `/r/ank/motor/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
-| `/r/hip/motor/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
-| `/r/hip/motor/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
-| `/r/hip/motor/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
-| `/r/kne/motor/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
-| `/r/kne/motor/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
-| `/r/kne/motor/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
+| `/l/ank/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
+| `/l/ank/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
+| `/l/ank/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
+| `/l/hip/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
+| `/l/hip/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
+| `/l/hip/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
+| `/l/kne/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
+| `/l/kne/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
+| `/l/kne/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
+| `/r/ank/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
+| `/r/ank/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
+| `/r/ank/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
+| `/r/hip/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
+| `/r/hip/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
+| `/r/hip/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
+| `/r/kne/imu`        | `sensor_msgs/msg/Imu`               | 200 Hz        |
+| `/r/kne/joint_cmd`  | `yr_lle_msgs/msg/JointCmd`          | 500 Hz        |
+| `/r/kne/joint_state`| `yr_lle_msgs/msg/JointState`        | 500 Hz        |
 
 ### Message Types
 
@@ -88,6 +93,19 @@ ros2 launch yr_lle_sim gazebo_model.launch.py
 ```
 
 ![](./src/yr_lle_sim/media/gazebo_lle.png)
+
+---
+
+### Application Demo & RQT Graph 
+
+```bash
+sudo apt install ros-iron-rqt-graph -y
+colcon build
+ros2 launch yr_lle_app app_node.launch.py 
+rqt_graph
+```
+
+![](./src/yr_lle_sim/media/rqt-graph-app-node.png)
 
 ---
 
