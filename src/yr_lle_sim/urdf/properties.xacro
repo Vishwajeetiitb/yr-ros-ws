@@ -17,26 +17,29 @@
         <color rgba="0.8 0.8 1 ${alpha}" />
     </material>
 
+    <xacro:property name="abduction_motor_distance" value="0.35" />
+     
     <xacro:property name="waist_m" value="2.0" />
     <xacro:property name="waist_l" value="0.05" />
     <xacro:property name="waist_h" value="0.05" />
     <xacro:property name="waist_mat" value="silver" />
-    <xacro:property name="waist_mesh_w" value="0.42" />
+    <xacro:property name="waist_mesh_w" value="0.45" />
     <xacro:property name="waist_w" value="${waist_mesh_w}" />
     <xacro:property name="waist_h_offset" value="0.062" />
+    <xacro:property name="pel_joints_dist" value="0.4" />
     <xacro:property name="waist_mesh"
         value="file://$(find yr_lle_sim)/urdf/meshes_yr/waist_center.STL" />
 
     <xacro:property name="pel_m" value="1.0" />
-    <xacro:property name="pel_l" value="0.0" />
-    <xacro:property name="pel_w" value="0.0" />
-    <xacro:property name="pel_h" value="0.0" />
+    <xacro:property name="pel_l" value="0.1" />
+    <xacro:property name="pel_w" value="0.05" />
+    <xacro:property name="pel_h" value="0.1" />
     <xacro:property name="pel_mat" value="silver" />
     <xacro:property name="pel_x_offset" value="-0.09" />
     <xacro:property name="pel_y_offset" value="-0.028" />
     <xacro:property name="pel_h_offset" value="0.088" />
     <xacro:property name="pel_mesh"
-        value="file://$(find yr_lle_sim)/urdf/meshes_yr/orig.waist_corner_bracket.STL" />
+        value="file://$(find yr_lle_sim)/urdf/meshes_yr/waist_corner_bracket.STL" />
 
     <xacro:property name="thigh_m" value="1.5" />
     <xacro:property name="thigh_l" value="0.468" />
@@ -65,5 +68,25 @@
     <xacro:property name="thigh_mesh" value="file://$(find yr_lle_sim)/urdf/meshes_yr/exo_thigh.STL" />
     <xacro:property name="shank_mesh" value="file://$(find yr_lle_sim)/urdf/meshes_yr/exo_shank.STL" />
     <xacro:property name="foot_mesh" value="file://$(find yr_lle_sim)/urdf/meshes_yr/exo_foot.STL" />
+
+
+
+
+    <!-- Human Boday Paramters -->
+
+    <xacro:property name="human_thigh_r" value="0.075" />
+    <xacro:property name="human_shank_r" value="0.056" />
+    <xacro:property name="human_waist_l" value="0.1" />
+    <xacro:property name="human_waist_w" value="0.35" />
+    <xacro:property name="human_waist_h" value="0.4" />
+
+    <xacro:property name="human_weight" value="70" />
+    <xacro:property name="human_waist_weight" value="${human_weight*0.842}" />
+    <xacro:property name="human_thigh_weight" value="${human_weight*0.1}" />
+    <xacro:property name="human_shank_weight" value="${human_weight*0.05}" />
+    <xacro:property name="human_foot_weight" value="${human_weight*0.015}" />
+
+
+
 
 </robot>

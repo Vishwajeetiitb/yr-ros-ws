@@ -2,28 +2,37 @@ controller_manager:
   ros__parameters:
     update_rate: 100 # Hz
 
+    human_effort_controller:
+      type: effort_controllers/JointGroupEffortController
+    
+    yr_effort_controller:
+      type: effort_controllers/JointGroupEffortController
+
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    forward_position_controller2:
-      # type: joint_trajectory_controller/JointTrajectoryController
-      type: forward_command_controller/ForwardCommandController
-      # type: effort_controllers/JointPositionController
-      # type: effort_controllers/JointGroupEffortController
-
-    # joint_trajectory_position_controller:
-    #   type: joint_trajectory_controller/JointTrajectoryController
-
-forward_position_controller2:
+human_effort_controller:
   ros__parameters:
-    # type: position_controllers/JointPositionController
-    # pid: {p: 1000.0, i: 0.0, d: 10.0}
     joints:
-      - l_hip_joint
-      - l_kne_joint
-    interface_name: position
-    command_interfaces:
-      - position
-    state_interfaces:
-      - position
-      - velocity
+      - human_l_thigh_abduction_joint
+      - human_l_thigh_flexion_joint
+      - human_l_thigh_rotation_joint
+      - human_l_kne_joint
+      - human_l_ank_joint
+      - human_r_thigh_abduction_joint
+      - human_r_thigh_flexion_joint
+      - human_r_thigh_rotation_joint
+      - human_r_kne_joint
+      - human_r_ank_joint
+
+yr_effort_controller:
+  ros__parameters:
+    joints:
+      - yr_l_pel_joint
+      - yr_l_hip_joint
+      - yr_l_kne_joint
+      - yr_l_ank_joint
+      - yr_r_pel_joint
+      - yr_r_hip_joint
+      - yr_r_kne_joint
+      - yr_r_ank_joint

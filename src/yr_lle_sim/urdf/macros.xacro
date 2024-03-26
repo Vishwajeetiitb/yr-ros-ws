@@ -44,10 +44,31 @@
         params="name m l w h o_x o_y o_z o_r o_p o_yaw mat mesh_filename mirror">
         <link name="${name}">
             <collision>
-                <origin xyz="0 0 ${-l/2}" rpy="0 0 0" />
+                <!-- <origin xyz="0 0 ${-l/2}" rpy="0 0 0" />
                 <geometry>
-                    <box size="${l} ${w} ${h}" />
+                    <box size="${h} ${w} ${l}" />
+                </geometry> -->
+
+
+                <xacro:if value="${mesh_filename != ''}">
+                    <!-- <origin xyz="0 0 0" rpy="0 0 ${-PI}" /> -->
+                    <!-- <origin xyz="${-h} ${-w/2} ${-l}" rpy="${PI/2} 0 ${PI/2 + float(o_yaw)}" /> -->
+                    <origin xyz="${o_x} ${o_y} ${o_z}" rpy="${PI/2} 0 ${PI/2 + o_yaw}" />
+                </xacro:if>
+                <xacro:unless value="${mesh_filename != ''}">
+                    <origin xyz="0 0 ${-l/2}" rpy="0 0 ${-PI}" />
+                </xacro:unless>
+                <geometry>
+                    <xacro:if value="${mesh_filename != ''}">
+                        <mesh filename="${mesh_filename}"
+                            scale="${mirror*mesh_scale} ${mesh_scale} ${mesh_scale}" />
+                    </xacro:if>
+                    <xacro:unless value="${mesh_filename != ''}">
+                        <box size="${h} ${w} ${l}" />
+                    </xacro:unless>
                 </geometry>
+                <origin xyz="0 0 ${-l/2}" rpy="0 0 0" />
+                <material name="${mat}" />
             </collision>
             <visual>
                 <!-- <xacro:if value="${use_mesh}">
@@ -104,6 +125,16 @@
         </joint>
     </xacro:macro>
 
+    <xacro:macro name="create_joint2"
+        params="name parent child origin_x origin_y origin_z o_roll o_pitch o_yaw axis_x axis_y axis_z lower_limit upper_limit effort velocity">
+        <joint name="${name}" type="continuous">
+            <parent link="${parent}" />
+            <child link="${child}" />
+            <origin xyz="${origin_x} ${origin_y} ${origin_z}" rpy="${o_roll} ${o_pitch} ${o_yaw}" />
+            <axis xyz="${axis_x} ${axis_y} ${axis_z}" />
+        </joint>
+    </xacro:macro>
+
     <!-- ======================================================= -->
     <!-- TRANSMISSION                                            -->
     <!-- ======================================================= -->
@@ -140,9 +171,10 @@
         </gazebo>
     </xacro:macro>
 
-    <xacro:macro name="add_imu_sensor" params="link_name">
+    <xacro:macro name="add_imu_sensor" params="link_name joint_name">
         <gazebo reference="${link_name}">
             <sensor type="imu" name="${link_name}_imu_sensor">
+                <pose>0 0 0 0 0 0</pose>
                 <always_on>true</always_on>
                 <update_rate>50</update_rate>
                 <imu>
@@ -157,11 +189,11 @@
                         <z>0.0</z>
                     </linear_acceleration>
                 </imu>
-                <plugin name="gazebo_ros_imu_controller" filename="libgazebo_ros_imu_sensor.so">
+                <plugin name="imu" filename="libgazebo_ros_imu_sensor.so">
                     <ros>
                         <!-- Output topic name -->
-                        <namespace>${link_name}</namespace>
-                        <argument>imu/data:=imu</argument>
+                        <namespace>${joint_name}</namespace>
+                        <argument>imu/out:=imu</argument>
                     </ros>
                     <!-- Frame ID for the IMU data -->
                     <frameName>${link_name}</frameName>
@@ -169,5 +201,6 @@
             </sensor>
         </gazebo>
     </xacro:macro>
+
 
 </robot>

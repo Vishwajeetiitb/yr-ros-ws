@@ -7,6 +7,9 @@ from launch_ros.actions import Node
 from launch_ros.descriptions import ParameterValue
 from launch.actions import ExecuteProcess
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction
+from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
+
 
 
 def generate_launch_description():
@@ -36,10 +39,26 @@ def generate_launch_description():
         executable='spawn_entity.py',
         arguments=['-entity', 'yr_lle_model',
                    '-topic', 'robot_description',
-                   '-x', '0.3',
-                   '-y', '0.3',
-                   '-z', '1'],
+                   '-x', '2',
+                   '-y', '2.5',
+                   '-z', '1.5'],
         output='screen')
+    
+    load_joint_state_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+             'joint_state_broadcaster'],
+        output='screen'
+    )
+
+    load_human_effort_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'human_effort_controller'],
+        output='screen'
+    )
+
+    load_yr_effort_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'yr_effort_controller'],
+        output='screen'
+    )
 
     delay_seconds = 1.0
     spawn_entity_delayed_delayed = TimerAction(
@@ -64,4 +83,10 @@ def generate_launch_description():
         ),
         delete_entity_cmd,
         spawn_entity_delayed_delayed,
+        load_joint_state_broadcaster,
+        load_human_effort_controller,
+        load_yr_effort_controller
+
+
+        
     ])

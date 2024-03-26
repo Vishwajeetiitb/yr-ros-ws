@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="four_bar_linkage">
+ 
+
+   <!-- Constants for robot dimensions -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <!-- ==================================================================== -->
+  <!-- ==================================================================== -->
+  <!-- Important angle when robot at origin point, must be calculated!!!!!! -->
+  <xacro:property name="elbow_angle" value="${30*PI/180}" />
+  <!-- ==================================================================== -->
+  <!-- ==================================================================== -->
+  <xacro:property name="wrist_angle" value="-${elbow_angle}" />
+  <xacro:property name="mass" value="0.02" /> <!-- arbitrary value for mass -->
+  <xacro:property name="upper_width" value="0.04" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <xacro:property name="lower_width" value="0.01" /> 
+  <xacro:property name="upper_height" value="0.2" /> <!-- base and end links -->
+  <xacro:property name="lower_height1" value="0.06" /> <!-- Upper link -->
+  <xacro:property name="lower_height2" value="0.5" /> <!-- lower link -->
+  <xacro:property name="lower_height3" value="0.03" /> <!-- Upper link -->
+
+  <!-- Properties for easy modifications -->
+  <xacro:property name="link_length" value="1.0"/>
+  <xacro:property name="link_width" value="0.1"/>
+  <xacro:property name="link_height" value="0.02"/>
+  <xacro:property name="prefix" value="front_"/>
+
+   <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="${prefix}lower_top_link"/>
+    <origin xyz="0 0 2" rpy="0 0 0"/>
+  </joint>
+
+  <link name="${prefix}lower_top_link">
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_height1} ${lower_width}"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_height1} ${lower_width}"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.2 0.2 0.2 1.0"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${mass / 12.0 * (lower_width*lower_width + lower_height1*lower_height1)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (lower_width*lower_width + lower_width*lower_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (lower_width*lower_width + lower_height1*lower_height1)}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}lower_top_rignt_joint" type="continuous">
+      <parent link="${prefix}lower_top_link"/>
+      <child link="${prefix}lower_right_link"/>
+      <origin xyz="0 ${-lower_height1/2} 0" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="${prefix}lower_right_link">
+      <collision>
+        <origin xyz="0 0 ${-lower_height2/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_width} ${lower_height2}"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 ${-lower_height2/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_width} ${lower_height2}"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.2 0.2 0.2 1.0"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin xyz="0 0 ${-lower_height2/2}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${mass / 12.0 * (lower_width*lower_width + lower_height2*lower_height2)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (lower_height2*lower_height2 + lower_width*lower_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (lower_width*lower_width + lower_width*lower_width)}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}lower_top_left_joint" type="continuous">
+      <parent link="${prefix}lower_top_link"/>
+      <child link="${prefix}lower_left_link"/>
+      <origin xyz="0 ${lower_height1/2} 0" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="${prefix}lower_left_link">
+      <collision>
+        <origin xyz="0 0 ${-lower_height2/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_width} ${lower_height2}"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 ${-lower_height2/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_width} ${lower_height2}"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.2 0.2 0.2 1.0"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin xyz="0 0 ${-lower_height2/2}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${mass / 12.0 * (lower_width*lower_width + lower_height2*lower_height2)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (lower_height2*lower_height2 + lower_width*lower_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (lower_width*lower_width + lower_width*lower_width)}"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}lower_right_bottom_joint" type="revolute">
+      <parent link="${prefix}lower_right_link"/>
+      <child link="${prefix}lower_bottom_link"/>
+      <origin xyz="0 0 ${-lower_height2}" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-3.14" upper="3.14" effort="1000"
+                velocity="10" />
+    </joint>
+
+    <link name="${prefix}lower_bottom_link">
+      <collision>
+        <origin xyz="0 ${lower_height1/2} 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_height1} ${lower_width}"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 ${lower_height1/2} 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_width} ${lower_height1} ${lower_width}"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.2 0.2 0.2 1.0"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin xyz="0 ${lower_height1/2} 0" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${mass / 12.0 * (lower_width*lower_width + lower_height1*lower_height1)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (lower_height1*lower_height1 + lower_width*lower_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (lower_width*lower_width + lower_width*lower_width)}"/>
+      </inertial>
+    </link>
+
+    
+    <joint name="${prefix}lower_bottom_virtual_joint" type="continuous">
+      <parent link="${prefix}lower_bottom_link"/>
+      <child link="${prefix}lower_bottom_virtual_link"/>
+      <origin xyz="0 ${lower_height1} 0" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="${prefix}lower_bottom_virtual_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.01"/>
+        <inertia
+          ixx="0.001" ixy="0.0" ixz="0.0"
+          iyy="0.001" iyz="0.0"
+          izz="0.001"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}lower_left_virtual_joint" type="fixed">
+      <parent link="${prefix}lower_left_link"/>
+      <child link="${prefix}lower_left_virtual_link"/>
+      <origin xyz="0 0 ${-lower_height2}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}lower_left_virtual_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.01"/>
+        <inertia
+          ixx="0.001" ixy="0.0" ixz="0.0"
+          iyy="0.001" iyz="0.0"
+          izz="0.001"/>
+      </inertial>
+    </link>
+
+
+<!-- <ros2_control name="fourbarHardware" type="system">
+  <hardware>
+    <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+  </hardware>
+
+  <joint name="front_lower_right_bottom_joint">
+    <command_interface name="effort">
+      <param name="min">-3.14</param>
+      <param name="max">3.15</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+    <state_interface name="effort"/>
+  </joint>
+
+</ros2_control> -->
+
+<ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="front_lower_right_bottom_joint">
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">1.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
+
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <parameters>$(find four_bar)/config/control.yaml</parameters>
+        </plugin>
+
+        <joint name="${prefix}lower_left_bottom_joint" type="fixed">
+        <parent>${prefix}lower_left_virtual_link</parent>
+        <child>${prefix}lower_bottom_virtual_link</child>
+        <pose> 0 0 0 0 0 0 </pose>
+      </joint>
+
+
+    </gazebo>
+
+
+</robot>

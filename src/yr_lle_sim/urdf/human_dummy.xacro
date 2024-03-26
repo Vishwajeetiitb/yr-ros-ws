@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<robot name="lower_limb_exoskeleton" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="create_human_leg" params="side">
+    <!-- human thigh link  -->
+
+    <link name="human_${side}_thigh_virtual_link_1">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.01" />
+        <inertia
+          ixx="0.00001" ixy="0.0" ixz="0.0"
+          iyy="0.00001" iyz="0.0"
+          izz="0.00001" />
+      </inertial>
+    </link>
+
+    <joint name="human_${side}_thigh_abduction_joint" type="revolute">
+      <parent link="human_waist_link" />
+      <child link="human_${side}_thigh_virtual_link_1" />
+      <xacro:if value="${side == 'l'}">
+        <origin xyz="0 ${human_waist_w/2} ${-human_waist_h}" rpy="${PI/2} 0 ${PI}" />
+      </xacro:if>
+
+      <xacro:if value="${side == 'r'}">
+        <origin xyz="0 ${-human_waist_w/2} ${-human_waist_h}" rpy="${-PI/2} 0 ${PI}" />
+      </xacro:if>
+
+      <axis xyz="1 0 0" />
+      <limit lower="${-PI}" upper="${PI}" effort="1000"
+        velocity="10" />
+    </joint>
+
+    <link name="human_${side}_thigh_virtual_link_2">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.01" />
+        <inertia
+          ixx="0.00001" ixy="0.0" ixz="0.0"
+          iyy="0.00001" iyz="0.0"
+          izz="0.00001" />
+      </inertial>
+    </link>
+    <joint name="human_${side}_thigh_flexion_joint" type="revolute">
+      <parent link="human_${side}_thigh_virtual_link_1" />
+      <child link="human_${side}_thigh_virtual_link_2" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <!-- <origin xyz="${-pel_l} ${-pel_w/2} ${-pel_l/2}" rpy="${PI/2} 0 0"/> -->
+      <axis xyz="0 1 0" />
+      <limit lower="${-PI}" upper="${PI}" effort="1000"
+        velocity="10" />
+    </joint>
+
+    <link name="human_${side}_thigh">
+      <visual>
+        <origin xyz="0 0 ${-thigh_l/2}" rpy="0 0 0" />
+        <geometry>
+
+          <cylinder length="${thigh_l}" radius="${human_thigh_r}" /> <!-- Variable height for
+                the pole -->
+        </geometry>
+        <material name="silver" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${-thigh_l/2}" rpy="0 0 0" />
+        <geometry>
+          <cylinder length="${thigh_l - 0.05}" radius="${human_thigh_r}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 ${-thigh_l/2}" rpy="0 0 0" />
+        <mass value="${human_thigh_weight}" />
+        <inertia
+          ixx="${human_thigh_weight / 12.0 * (3 * human_thigh_r**2 + thigh_l**2)}"
+          ixy="0"
+          ixz="0"
+          iyy="${human_thigh_weight / 12.0 * (3 * human_thigh_r**2 + thigh_l**2)}"
+          iyz="0"
+          izz="${human_thigh_weight / 2.0 * human_thigh_r**2}" />
+      </inertial>
+
+    </link>
+
+
+    <joint name="human_${side}_thigh_rotation_joint" type="revolute">
+      <parent link="human_${side}_thigh_virtual_link_2" />
+      <child link="human_${side}_thigh" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="${-PI}" upper="${PI}" effort="1000"
+        velocity="10" />
+    </joint>
+
+
+    <!-- human knee link  -->
+    <link name="human_${side}_shank">
+      <visual>
+        <origin xyz="0 0 ${-shank_l/2}" rpy="0 0 0" />
+        <geometry>
+
+          <cylinder length="${shank_l}" radius="${human_shank_r}" /> <!-- Variable height for
+                the pole -->
+        </geometry>
+        <material name="silver" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${-shank_l/2}" rpy="0 0 0" />
+        <geometry>
+          <cylinder length="${shank_l - 0.05}" radius="${human_shank_r}" />
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 ${-shank_l/2}" rpy="0 0 0" />
+        <mass value="${human_shank_weight}" />
+        <inertia
+          ixx="${human_shank_weight / 12.0 * (3 * human_shank_r**2 + shank_l**2)}"
+          iyy="${human_shank_weight / 12.0 * (3 * human_shank_r**2 + shank_l**2)}"
+          izz="${human_shank_weight / 2.0 * human_shank_r**2}"
+          ixy="0"
+          ixz="0"
+          iyz="0" />
+      </inertial>
+
+    </link>
+
+    <joint name="human_${side}_kne_joint" type="revolute">
+      <parent link="human_${side}_thigh" />
+      <child link="human_${side}_shank" />
+      <origin xyz="0 0 ${-thigh_l}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <limit lower="-1.57" upper="0.2" effort="1000"
+        velocity="10" />
+    </joint>
+
+    <!-- human ankel link  -->
+    <link name="human_${side}_foot">
+      <visual>
+        <origin xyz="${-foot_l/2} 0 ${-foot_l/3}" rpy="0 0 0" />
+        <geometry>
+          <box size="${foot_l} ${foot_h} ${foot_w/2}" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="${-foot_l/2} 0 ${-foot_l/3}" rpy="0 0 0" />
+        <geometry>
+          <box size="${foot_l} ${foot_h} ${foot_w/2}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="${-foot_l/2} 0 ${-foot_l/3}" rpy="0 0 0" />
+        <mass value="${human_foot_weight}" />
+        <inertia
+          ixx="${human_foot_weight / 12.0 * (foot_h * foot_h + (foot_w/2) * (foot_w/2))}"
+          ixy="0"
+          ixz="0"
+          iyy="${human_foot_weight / 12.0 * (foot_l * foot_l + (foot_w/2) * (foot_w/2))}"
+          iyz="0"
+          izz="${human_foot_weight / 12.0 * (foot_l * foot_l + foot_h * foot_h)}" />
+      </inertial>
+
+    </link>
+
+    <joint name="human_${side}_ank_joint" type="revolute">
+      <parent link="human_${side}_shank" />
+      <child link="human_${side}_foot" />
+      <origin xyz="0 0 ${-(shank_l)}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <limit lower="-1.5" upper="0.2" effort="1000"
+        velocity="10" />
+    </joint>
+
+    <link name="human_${side}_foot_virtual_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.01" />
+        <inertia
+          ixx="0.001" ixy="0.0" ixz="0.0"
+          iyy="0.001" iyz="0.0"
+          izz="0.001" />
+      </inertial>
+    </link>
+
+    <joint name="human_${side}_ank_virtual_joint" type="fixed">
+      <parent link="human_${side}_foot" />
+      <child link="human_${side}_foot_virtual_link" />
+      <origin xyz="0 0 ${-foot_w}" rpy="0 0 0" />
+    </joint>
+
+    <gazebo>
+      <joint name="human_yr_${side}_foot_joint" type="fixed">
+        <parent>human_${side}_foot_virtual_link</parent>
+        <child>${side}_foot_link</child>
+        <pose> 0 0 0 0 0 0 </pose>
+      </joint>
+    </gazebo>
+
+
+    <!-- human thigh link  -->
+
+
+  </xacro:macro>
+
+
+</robot>
