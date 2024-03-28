@@ -74,7 +74,7 @@ def main(args=None):
     rclpy.init(args=args)
     switcher = ControllerSwitcher()
     pi = 3.14159265359
-    switcher.set_angles([-pi/2,-pi/4,pi/2,-pi/4, pi/2,-pi/4, pi/2, -pi/4])  # Example: switch to angle mode and publish command
+    switcher.set_angles([-pi/2,-pi/6,pi/2,-pi/4, pi/2,-pi/4, pi/2, -pi/4])  # Example: switch to angle mode and publish command
     # switcher.set_torques([-10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     rclpy.spin(switcher)
     rclpy.shutdown()

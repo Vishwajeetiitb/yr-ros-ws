@@ -42,7 +42,7 @@ def generate_launch_description():
                    '-topic', 'robot_description',
                    '-x', '0',
                    '-y', '0',
-                   '-z', '0.9   '],
+                   '-z', '1.5   '],
         output='screen')
     
     load_joint_state_broadcaster = ExecuteProcess(
@@ -90,7 +90,7 @@ def generate_launch_description():
         delete_entity_cmd,
         spawn_entity_delayed_delayed,
         load_joint_state_broadcaster,
-        # load_yr_angle_controller
-        # load_yr_torque_controller
+        load_yr_angle_controller,   
+        load_yr_torque_controller
         
     ])
