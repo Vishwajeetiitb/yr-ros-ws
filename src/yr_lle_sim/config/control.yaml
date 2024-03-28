@@ -5,27 +5,30 @@ controller_manager:
     human_effort_controller:
       type: effort_controllers/JointGroupEffortController
     
-    yr_effort_controller:
+    yr_torque_controller:
       type: effort_controllers/JointGroupEffortController
+
+    yr_angle_controller:
+      type: joint_trajectory_controller/JointTrajectoryController 
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-human_effort_controller:
-  ros__parameters:
-    joints:
-      - human_l_thigh_abduction_joint
-      - human_l_thigh_flexion_joint
-      - human_l_thigh_rotation_joint
-      - human_l_kne_joint
-      - human_l_ank_joint
-      - human_r_thigh_abduction_joint
-      - human_r_thigh_flexion_joint
-      - human_r_thigh_rotation_joint
-      - human_r_kne_joint
-      - human_r_ank_joint
+# human_effort_controller:
+#   ros__parameters:
+#     joints:
+#       - human_l_thigh_abduction_joint
+#       - human_l_thigh_flexion_joint
+#       - human_l_thigh_rotation_joint
+#       - human_l_kne_joint
+#       - human_l_ank_joint
+#       - human_r_thigh_abduction_joint
+#       - human_r_thigh_flexion_joint
+#       - human_r_thigh_rotation_joint
+#       - human_r_kne_joint
+#       - human_r_ank_joint
 
-yr_effort_controller:
+yr_torque_controller:
   ros__parameters:
     joints:
       - yr_l_pel_joint
@@ -36,3 +39,62 @@ yr_effort_controller:
       - yr_r_hip_joint
       - yr_r_kne_joint
       - yr_r_ank_joint
+
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+
+
+yr_angle_controller:
+  ros__parameters:
+    joints:
+      - yr_l_pel_joint
+      - yr_l_hip_joint
+      - yr_l_kne_joint
+      - yr_l_ank_joint
+      - yr_r_pel_joint
+      - yr_r_hip_joint
+      - yr_r_kne_joint
+      - yr_r_ank_joint
+
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+    gains:
+        yr_l_pel_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_l_hip_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_l_kne_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_l_ank_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_r_pel_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_r_hip_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_r_kne_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0
+        yr_r_ank_joint:
+          p: 100.0
+          i: 0.0
+          d: 0.0

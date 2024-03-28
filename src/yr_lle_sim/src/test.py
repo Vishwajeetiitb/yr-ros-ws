@@ -15,7 +15,7 @@ class IMUVisualizer(Node):
         super().__init__('imu_visualizer')
         self.subscription = self.create_subscription(
             Imu,
-            '/yr_l_kne_joint/imu',  # Update this to your IMU topic
+            '/imu/data',  # Update this to your IMU topic
             self.imu_callback,
             10)
         self.br = tf2_ros.TransformBroadcaster(self)

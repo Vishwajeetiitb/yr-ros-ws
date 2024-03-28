@@ -1,0 +1,398 @@
+<?xml version="1.0"?>
+<robot name="lower_limb_exoskeleton" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="properties.xacro" />
+  <xacro:include filename="macros.xacro" />
+  <xacro:include filename="human_dummy.xacro" />
+
+  <link name="world"/>
+
+  <joint name="pole_to_waist" type="fixed">
+    <parent link="world" />
+    <child link="waist_link" />
+    <origin xyz="0 0 0  " />
+  </joint>
+
+
+  <link name="human_waist_link">
+    <visual>
+      <origin xyz="0 0 ${-human_waist_h/2}" rpy="0 0 0" />
+      <geometry>
+        <box size="${human_waist_l} ${human_waist_w} ${human_waist_h}" />
+      </geometry>
+      <material name="black" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${-human_waist_h/2}" rpy="0 0 0" />
+      <geometry>
+        <box size="${human_waist_l} ${human_waist_w} ${human_waist_h}" />
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 ${-human_waist_h/2}" rpy="0 0 0" />
+      <mass value="${human_waist_weight}" />
+      <inertia
+        ixx="${human_waist_weight / 12.0 * (human_waist_w**2 + human_waist_h**2)}"
+        iyy="${human_waist_weight / 12.0 * (human_waist_l**2 + human_waist_h**2)}"
+        izz="${human_waist_weight / 12.0 * (human_waist_l**2 + human_waist_w**2)}"
+        ixy="0"
+        ixz="0"
+        iyz="0" />
+    </inertial>
+
+  </link>
+
+  <joint name="human_waist_link_joint" type="fixed">
+    <parent link="waist_link" />
+    <child link="human_waist_link" />
+    <origin xyz="${human_waist_l/2 + 0.08} 0 ${human_waist_h/3}" rpy="0 0 0" />
+  </joint>
+  <xacro:create_link3 name="waist_link" m="${waist_m}" l="${waist_l}" w="${waist_w/2}"
+    h="${waist_h}" o_x="0" o_y="${waist_mesh_w/2 -0.015}" o_z="${-waist_h_offset}" o_r="0"
+    o_p="${-PI}"
+    o_yaw="${-PI}" mat="${waist_mat}" mesh_filename="${waist_mesh}" mirror="1" />
+
+
+  <xacro:create_link3 name="l_pel_link" m="${pel_m}" l="${pel_l}" w="${pel_w}"
+    h="${pel_h}" o_x="${pel_x_offset}" o_y="${pel_y_offset}"
+    o_z="${-pel_h_offset}" o_r="0" o_p="0"
+    o_yaw="0" mat="${pel_mat}" mesh_filename="${pel_mesh}" mirror="1" />
+  <xacro:create_link3 name="l_thigh_link" m="${thigh_m}" l="${thigh_l}" w="${thigh_w}"
+    h="${thigh_h}" o_x="${thigh_w}" o_y="${thigh_w/2}" o_z="${-thigh_l}" o_r="0" o_p="0"
+    o_yaw="${PI}" mat="${thigh_mat}" mesh_filename="${thigh_mesh}" mirror="1" />
+  <xacro:create_link3 name="l_shank_link" m="${shank_m}" l="${shank_l}" w="${shank_w}"
+    h="${shank_h}" o_x="${shank_w}" o_y="${shank_w/2}" o_z="${-shank_l}" o_r="0" o_p="0"
+    o_yaw="${PI}"
+    mat="${shank_mat}" mesh_filename="${shank_mesh}" mirror="1" />
+  <!-- <xacro:create_link2 name="l_foot_link" m="${foot_m}" l="${foot_h}" w="${foot_w}"
+    h="${foot_l}" o_x="${-foot_h}" o_y="${foot_w}" o_z="${-foot_l}" o_r="0" o_p="0" o_yaw="0"
+    mat="${foot_mat}"
+    mesh_filename="${foot_mesh}" mirror="-1" /> -->
+
+    <link name="l_foot_link">
+      <collision>
+        <origin xyz="${foot_h/2} 0 ${-foot_h}" rpy="0 0 0" />
+        <geometry>
+            <box size="${foot_h*2} ${foot_w} ${foot_l/2}" />
+        </geometry>
+
+      </collision>
+      <visual>
+              <origin xyz="${-foot_h} ${foot_w} ${-foot_l}" rpy="${PI/2} 0 ${PI/2 + 0}" />
+          
+          <geometry>
+          <mesh filename="${foot_mesh}"
+                      scale="${-1*mesh_scale} ${mesh_scale} ${mesh_scale}" />
+
+          </geometry>
+          <origin xyz="0 0 ${-foot_h/2}" rpy="0 0 0" />
+          <material name="${foot_mat}" />
+      </visual>
+      <inertial>
+          <origin xyz="0 0 ${-foot_h/2}" rpy="0 0 0" />
+          <mass value="${foot_m}" />
+          <inertia
+              ixx="${foot_m / 12.0 * (foot_w*foot_w + foot_h*foot_h)}"
+              ixy="0.0" ixz="0.0"
+              iyy="${foot_m / 12.0 * (foot_l*foot_l + foot_h*foot_h)}"
+              iyz="0.0"
+              izz="${foot_m / 12.0 * (foot_l*foot_l + foot_w*foot_w)}" />
+      </inertial>
+  </link>
+
+  <xacro:create_link3 name="r_pel_link" m="${pel_m}" l="${pel_l}" w="${pel_w}"
+    h="${pel_h}" o_x="${pel_x_offset}" o_y="${pel_y_offset}"
+    o_z="${-pel_h_offset}" o_r="0" o_p="0"
+    o_yaw="0" mat="${pel_mat}" mesh_filename="${pel_mesh}" mirror="1" />
+  <xacro:create_link3 name="r_thigh_link" m="${thigh_m}" l="${thigh_l}" w="${thigh_w}"
+    h="${thigh_h}" o_x="${-thigh_w}" o_y="${-thigh_w/2}" o_z="${-thigh_l}" o_r="0" o_p="0"
+    o_yaw="0" mat="${thigh_mat}" mesh_filename="${thigh_mesh}" mirror="1" />
+  <xacro:create_link3 name="r_shank_link" m="${shank_m}" l="${shank_l}" w="${shank_w}"
+    h="${shank_h}" o_x="${-shank_w}" o_y="${-shank_w/2}" o_z="${-shank_l}" o_r="0" o_p="0" o_yaw="0"
+    mat="${shank_mat}" mesh_filename="${shank_mesh}" mirror="1" />
+    <!-- <xacro:create_link2 name="r_foot_link" m="${foot_m}" l="${foot_h}" w="${foot_w}"
+    h="${foot_l}" o_x="${-foot_h}" o_y="${-foot_w}" o_z="${-foot_l}" o_r="0" o_p="0" o_yaw="0"
+    mat="${foot_mat}"
+    mesh_filename="${foot_mesh}" mirror="1" /> -->
+
+
+    <link name="r_foot_link">
+      <collision>
+          <origin xyz="${foot_h/2} 0 ${-foot_h}" rpy="0 0 0" />
+          <geometry>
+              <box size="${foot_h*2} ${foot_w} ${foot_l/2}" />
+          </geometry>
+
+      </collision>
+      <visual>
+              <origin xyz="${-foot_h} ${-foot_w} ${-foot_l}" rpy="${PI/2} 0 ${PI/2 + 0}" />
+          
+          <geometry>
+          <mesh filename="${foot_mesh}"
+                      scale="${1*mesh_scale} ${mesh_scale} ${mesh_scale}" />
+
+          </geometry>
+          <origin xyz="0 0 ${-foot_h/2}" rpy="0 0 0" />
+          <material name="${foot_mat}" />
+      </visual>
+      <inertial>
+          <origin xyz="0 0 ${-foot_h/2}" rpy="0 0 0" />
+          <mass value="${foot_m}" />
+          <inertia
+              ixx="${foot_m / 12.0 * (foot_w*foot_w + foot_h*foot_h)}"
+              ixy="0.0" ixz="0.0"
+              iyy="${foot_m / 12.0 * (foot_l*foot_l + foot_h*foot_h)}"
+              iyz="0.0"
+              izz="${foot_m / 12.0 * (foot_l*foot_l + foot_w*foot_w)}" />
+      </inertial>
+  </link>
+
+  <!-- ======================================================= -->
+  <!-- JOINTS                                                  -->
+  <!-- ======================================================= -->
+  <xacro:macro name="create_leg" params="side origin_y o_roll hip_y_offset">
+
+    <xacro:if value="${side == 'l'}">
+      <xacro:property name="pel_lower_limit" value="${-PI}" />
+      <xacro:property name="pel_upper_limit" value="${-PI/4}" />
+    </xacro:if>
+
+    <xacro:if value="${side == 'r'}">
+      <xacro:property name="pel_lower_limit" value="${PI/4}" />
+      <xacro:property name="pel_upper_limit" value="${PI}" />
+    </xacro:if>  
+
+    <xacro:create_joint2 name="yr_${side}_pel_joint" parent="waist_link"
+      child="${side}_pel_link" origin_x="0" origin_y="${origin_y}"
+      origin_z="0" o_roll="0"
+      o_pitch="0" o_yaw="${-PI}"
+      axis_x="1" axis_y="0" axis_z="0"
+      lower_limit="${pel_lower_limit}" upper_limit="${pel_upper_limit}" effort="10000" velocity="10.0" />
+
+    <xacro:create_joint2 name="yr_${side}_hip_joint" parent="${side}_pel_link"
+      child="${side}_thigh_link"
+      origin_x="${-pel_l}" origin_y="${hip_y_offset}" origin_z="${-pel_h}" o_roll="${o_roll}"
+      o_pitch="0" o_yaw="${-PI}"
+      axis_x="0" axis_y="1" axis_z="0"
+      lower_limit="${3*PI/4}" upper_limit="${-3*PI/4}" effort="10000" velocity="10.0" />
+
+    <xacro:create_joint2 name="yr_${side}_kne_joint" parent="${side}_thigh_link"
+      child="${side}_shank_link"
+      origin_x="0" origin_y="0" origin_z="${-thigh_l}" o_roll="0" o_pitch="0" o_yaw="0"
+      axis_x="0" axis_y="1" axis_z="0"
+      lower_limit="${-PI/4}" upper_limit="${3*PI/2}" effort="10000" velocity="10.0" />
+    <xacro:create_joint2 name="yr_${side}_ank_joint" parent="${side}_shank_link"
+      child="${side}_foot_link"
+      origin_x="0" origin_y="0" origin_z="${-shank_l}" o_roll="0" o_pitch="0" o_yaw="0"
+      axis_x="0" axis_y="1" axis_z="0"
+      lower_limit="${-PI/2}" upper_limit="${PI/2}" effort="10000" velocity="10.0" />
+  </xacro:macro>
+
+  <xacro:create_leg side="l" origin_y="${(abduction_motor_distance) / 2}" o_roll="${-PI/2}"
+    hip_y_offset="${-pel_w/2}" />
+  <xacro:create_leg side="r" origin_y="${-(abduction_motor_distance) / 2}" o_roll="${PI/2}"
+    hip_y_offset="${pel_w/2}" />
+
+
+   
+
+    
+  <ros2_control name="GazeboSystem" type="system">
+
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="yr_l_pel_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+
+      <state_interface name="position">
+        <param name="initial_value">${yr_l_pel_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_l_hip_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+
+      <state_interface name="position">
+        <param name="initial_value">${yr_l_hip_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_l_kne_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">${yr_l_kne_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_l_ank_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">${yr_l_ank_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_r_pel_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">${yr_r_pel_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_r_hip_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">${yr_r_hip_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_r_kne_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">${yr_r_kne_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+    <joint name="yr_r_ank_joint">
+      <command_interface name="position">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <command_interface name="effort">
+        <param name="min">-1000</param>
+        <param name="max">1000</param>
+      </command_interface> 
+      <state_interface name="position">
+        <param name="initial_value">${yr_r_ank_joint_val}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+
+
+  </ros2_control>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(find yr_lle_sim)/config/control.yaml</parameters>
+    </plugin>
+  </gazebo>
+<!-- 
+  <xacro:define_gazebo_material link_name="human_waist_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="waist_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="l_pel_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="l_thigh_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="l_shank_link" r="0.8" g="0.8" b="0.8" a="1" />
+  <xacro:define_gazebo_material link_name="l_foot_link" r="0.7" g="0.7" b="0.7" a="1" />
+
+  <xacro:define_gazebo_material link_name="r_pel_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="r_thigh_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="r_shank_link" r="0.7" g="0.7" b="0.7" a="1" />
+  <xacro:define_gazebo_material link_name="r_foot_link" r="0.7" g="0.7" b="0.7" a="1" /> -->
+  
+<!-- 
+  <xacro:define_gazebo_material link_name="stand_base" r="0.4" g="0.4" b="0.4" a="0.5" />
+  <xacro:define_gazebo_material link_name="support_pole" r="0.4" g="0.4" b="0.4" a="0.5" />
+ -->
+
+  
+
+
+  
+
+  <gazebo reference="l_pel_link">
+    <plugin name="gazebo_ros_force_system" filename="libgazebo_ros_force_system.so">
+      <!-- Add plugin-specific parameters here -->
+    </plugin>
+  </gazebo>
+  
+  <!-- Use the macro to add IMU sensors to specific links -->
+  <xacro:add_imu_sensor link_name="l_pel_link" joint_name="yr_l_pel_joint" />
+  <xacro:add_imu_sensor link_name="l_thigh_link" joint_name="yr_l_hip_joint" />
+  <xacro:add_imu_sensor link_name="l_shank_link" joint_name="yr_l_kne_joint"/>
+  <xacro:add_imu_sensor link_name="l_foot_link" joint_name="yr_l_ank_joint"/>
+
+  <xacro:add_imu_sensor link_name="r_pel_link" joint_name="yr_r_pel_joint"/>
+  <xacro:add_imu_sensor link_name="r_thigh_link" joint_name="yr_r_hip_joint"/>
+  <xacro:add_imu_sensor link_name="r_shank_link" joint_name="yr_r_kne_joint"/>
+  <xacro:add_imu_sensor link_name="r_foot_link" joint_name="yr_r_ank_joint"/>
+
+
+  
+<!-- 
+  <xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
+
+  <xacro:realsense_d435 sensor_name="d435_front" parent_link="l_thigh_link" rate="10">
+    <origin rpy="${PI/2} ${PI/3} 0 " xyz="0 0 ${-thigh_l/2}"/>
+  </xacro:realsense_d435>
+
+  <xacro:realsense_d435 sensor_name="d435_back" parent_link="l_thigh_link" rate="10">
+    <origin rpy="${PI/2} ${PI/3} ${PI}" xyz="0 0 ${-thigh_l/2}"/>
+  </xacro:realsense_d435> -->
+
+</robot>

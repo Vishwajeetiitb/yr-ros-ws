@@ -22,7 +22,8 @@ def generate_launch_description():
 
     # Xacro
     # xacro_file_name = 'exo.xacro'
-    xacro_file_name = 'model_gazebo.xacro'
+    # xacro_file_name = 'model_gazebo.xacro'
+    xacro_file_name = 'exo_without_human.xacro'
     xacro_file_path = os.path.join(pkg_dir, 'urdf', xacro_file_name)
     print(f'xacro_file_path: {xacro_file_path}')
     robot_description = Command(['xacro ', xacro_file_path])
@@ -39,9 +40,9 @@ def generate_launch_description():
         executable='spawn_entity.py',
         arguments=['-entity', 'yr_lle_model',
                    '-topic', 'robot_description',
-                   '-x', '2',
-                   '-y', '2.5',
-                   '-z', '1.5'],
+                   '-x', '0',
+                   '-y', '0',
+                   '-z', '0.9   '],
         output='screen')
     
     load_joint_state_broadcaster = ExecuteProcess(
@@ -50,13 +51,18 @@ def generate_launch_description():
         output='screen'
     )
 
-    load_human_effort_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'human_effort_controller'],
+    # load_human_effort_controller = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'human_effort_controller'],
+    #     output='screen'
+    # )
+
+    load_yr_torque_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'yr_torque_controller'],
         output='screen'
     )
 
-    load_yr_effort_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'yr_effort_controller'],
+    load_yr_angle_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'yr_angle_controller'],
         output='screen'
     )
 
@@ -84,9 +90,7 @@ def generate_launch_description():
         delete_entity_cmd,
         spawn_entity_delayed_delayed,
         load_joint_state_broadcaster,
-        load_human_effort_controller,
-        load_yr_effort_controller
-
-
+        # load_yr_angle_controller
+        # load_yr_torque_controller
         
     ])

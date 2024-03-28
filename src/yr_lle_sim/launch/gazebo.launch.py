@@ -23,7 +23,7 @@ def generate_launch_description():
 
     # Define the path to the world file
     # world_file_path = os.path.join(pkg_dir, 'worlds', 'empty.world')
-    world_file_path = os.path.join(pkg_dir, 'worlds', 'exo_env2.world')
+    world_file_path = os.path.join(pkg_dir, 'worlds', 'test.world')
 
     # Gazebo launch command
     gazebo = ExecuteProcess(

@@ -56,7 +56,7 @@
     <xacro:property name="foot_m" value="1.0" />
     <xacro:property name="foot_l" value="0.15" />
     <xacro:property name="foot_w" value="0.08" />
-    <xacro:property name="foot_h" value="0.10" />
+    <xacro:property name="foot_h" value="0.1" />
     <xacro:property name="foot_mat" value="silver" />
 
     <xacro:property name="stand_base_width" value="0.5" />
@@ -76,11 +76,11 @@
 
     <xacro:property name="human_thigh_r" value="0.075" />
     <xacro:property name="human_shank_r" value="0.056" />
-    <xacro:property name="human_waist_l" value="0.1" />
+    <xacro:property name="human_waist_l" value="0.25" />
     <xacro:property name="human_waist_w" value="0.35" />
     <xacro:property name="human_waist_h" value="0.4" />
 
-    <xacro:property name="human_weight" value="70" />
+    <xacro:property name="human_weight" value="75" />
     <xacro:property name="human_waist_weight" value="${human_weight*0.842}" />
     <xacro:property name="human_thigh_weight" value="${human_weight*0.1}" />
     <xacro:property name="human_shank_weight" value="${human_weight*0.05}" />
@@ -88,5 +88,16 @@
 
 
 
+    <xacro:property name="yr_l_pel_joint_val" value="${-PI/2}" />
+    <xacro:property name="yr_l_hip_joint_val" value="${-PI/4}" />
+    <xacro:property name="yr_l_kne_joint_val" value="${PI/2}" />
+    <xacro:property name="yr_l_ank_joint_val" value="${-PI/4}" />
 
+    <xacro:property name="yr_r_pel_joint_val" value="${PI/2}" />
+    <xacro:property name="yr_r_hip_joint_val" value="${-PI/4}" />
+    <xacro:property name="yr_r_kne_joint_val" value="${PI/2}" />
+    <xacro:property name="yr_r_ank_joint_val" value="${-PI/4}" />
+
+
+ 
 </robot>

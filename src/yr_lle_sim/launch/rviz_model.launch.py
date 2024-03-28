@@ -18,7 +18,7 @@ def generate_launch_description():
     arg_value = LaunchConfiguration('example_arg')
 
     # Xacro
-    xacro_file_name = 'exo.xacro'
+    xacro_file_name = 'exo_without_human.xacro'
     # xacro_file_name = 'model_gazebo.xacro'
     xacro_file_path = os.path.join(pkg_dir, 'urdf', xacro_file_name)
     print(f'xacro_file_path: {xacro_file_path}')

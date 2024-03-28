@@ -1,5 +1,6 @@
 <sdf version='1.7'>
   <world name='default'>
+    
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -1207,5 +1208,6 @@
         <pose>0 0 10 0 -0 0</pose>
       </light>
     </state>
+    <plugin name='gazebo_ros_force_system' filename='libgazebo_ros_force_system.so'/>
   </world>
 </sdf>
