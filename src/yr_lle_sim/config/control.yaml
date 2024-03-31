@@ -59,7 +59,7 @@ yr_angle_controller:
       - yr_r_ank_joint
 
     command_interfaces:
-      - position
+      - effort
     state_interfaces:
       - position
       - velocity
