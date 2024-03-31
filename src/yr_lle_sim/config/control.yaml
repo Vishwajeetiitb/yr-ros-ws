@@ -39,7 +39,12 @@ yr_torque_controller:
       - yr_r_hip_joint
       - yr_r_kne_joint
       - yr_r_ank_joint
-
+      
+command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
 
 yr_angle_controller:
   ros__parameters:
