@@ -30,18 +30,22 @@ class ControllerSwitcher(Node):
         measurements = msg.position #['yr_l_pel_joint', 'yr_l_hip_joint', 'yr_l_kne_joint', 'yr_l_ank_joint','yr_r_pel_joint', 'yr_r_hip_joint', 'yr_r_kne_joint', 'yr_r_ank_joint']
         print('Measurements',measurements)
 
-    def set_angles(self,angles):
-        activate = ['yr_angle_controller']
-        deactivate = ['yr_torque_controller']
-
+    def call_switch_service(self, activate, deactivate):
         req = SwitchController.Request(
-            start_controllers=activate, 
-            stop_controllers=deactivate, 
-            strictness=2, 
-            # start_asap=True, 
-            timeout=Duration(sec=3, nanosec=0)
+            start_controllers=activate,
+            stop_controllers=deactivate,
+            strictness=1,
+            timeout=Duration(sec=5, nanosec=0)
         )
-        self.future = self.cli.call_async(req)
+        future = self.cli.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
+        if future.result() is not None:
+            self.get_logger().info('Switch successful')
+        else:
+            self.get_logger().error('Failed to switch controllers')
+
+    def set_angles(self,angles):
+        self.call_switch_service(['yr_angle_controller'], ['yr_torque_controller'])
         msg = JointTrajectory()
         msg.joint_names = ['yr_l_pel_joint', 'yr_l_hip_joint', 'yr_l_kne_joint', 'yr_l_ank_joint',
                             'yr_r_pel_joint', 'yr_r_hip_joint', 'yr_r_kne_joint', 'yr_r_ank_joint']
@@ -54,17 +58,7 @@ class ControllerSwitcher(Node):
         self.get_logger().info('Published example angle command.')
 
     def set_torques(self,torques):
-        deactivate = ['yr_angle_controller']
-        activate = ['yr_torque_controller']
-
-        req = SwitchController.Request(
-            start_controllers=activate, 
-            stop_controllers=deactivate, 
-            strictness=2, 
-            # start_asap=True, 
-            timeout=Duration(sec=0, nanosec=0)
-        )
-        self.future = self.cli.call_async(req)
+        self.call_switch_service(['yr_torque_controller'], ['yr_angle_controller'])
         msg = Float64MultiArray()
         msg.data = torques
         self.torque_publisher.publish(msg)
@@ -74,8 +68,8 @@ def main(args=None):
     rclpy.init(args=args)
     switcher = ControllerSwitcher()
     pi = 3.14159265359
-    switcher.set_angles([-pi/2,-pi/6,pi/2,-pi/4, pi/2,-pi/4, pi/2, -pi/4])  # Example: switch to angle mode and publish command
-    # switcher.set_torques([-10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    # switcher.set_angles([-pi/2,-pi/6,0.0,-pi/4, pi/2,-pi/4, pi/2, -pi/4])  # Example: switch to angle mode and publish command
+    switcher.set_torques([-100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     rclpy.spin(switcher)
     rclpy.shutdown()
 

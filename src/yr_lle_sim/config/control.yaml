@@ -40,12 +40,6 @@ yr_torque_controller:
       - yr_r_kne_joint
       - yr_r_ank_joint
 
-    command_interfaces:
-      - effort
-    state_interfaces:
-      - position
-      - velocity
-
 
 yr_angle_controller:
   ros__parameters:
@@ -65,36 +59,36 @@ yr_angle_controller:
       - position
       - velocity
 
-    gains:
-        yr_l_pel_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_l_hip_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_l_kne_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_l_ank_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_r_pel_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_r_hip_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_r_kne_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
-        yr_r_ank_joint:
-          p: 100.0
-          i: 0.0
-          d: 0.0
+    # gains:
+    #     yr_l_pel_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_l_hip_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_l_kne_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_l_ank_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_r_pel_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_r_hip_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_r_kne_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
+    #     yr_r_ank_joint:
+    #       p: 100.0
+    #       i: 0.0
+    #       d: 0.0
